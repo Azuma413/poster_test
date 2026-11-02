@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 220" width="100%" height="100%">
+  <g transform="translate(15, 0)">
+    <!-- ロボットアーム：台座 -->
+    <path d="M 30,190 L 100,190 L 94,178 L 36,178 Z" fill="#000000" />
+    <path d="M 55,157 L 75,157 L 78,178 L 52,178 Z" fill="#000000" />
+
+    <!-- ロボットアーム：関節（透過穴） -->
+    <circle cx="65" cy="150" r="9.5" fill="none" stroke="#000000" stroke-width="9" />
+    <circle cx="100" cy="72" r="8.75" fill="none" stroke="#000000" stroke-width="8.5" />
+    <circle cx="165" cy="68" r="6.75" fill="none" stroke="#000000" stroke-width="6.5" />
+
+    <!-- ロボットアーム：リンク -->
+    <line x1="68.1" y1="143.2" x2="96.9" y2="78.8" stroke="#000000" stroke-width="18" stroke-linecap="butt" />
+    <line x1="107.5" y1="71.5" x2="159.0" y2="68.4" stroke="#000000" stroke-width="15" stroke-linecap="butt" />
+
+    <!-- ロボットアーム：グリッパー（音源である上段の物体へアプローチ） -->
+    <path d="M 171,62 L 180,62 L 192,46 L 210,46 L 216,54 L 211,58 L 206,53 L 195,53 L 186,68 L 195,83 L 206,83 L 211,78 L 216,82 L 210,90 L 192,90 L 180,74 L 171,74 Z" fill="#000000" />
+
+    <!-- 物体1（上段：音を発している物体） -->
+    <rect x="230" y="45" width="46" height="46" rx="6" fill="#000000" />
+
+    <!-- 物体2（下段：視覚的に同一な無音の物体） -->
+    <rect x="230" y="133" width="46" height="46" rx="6" fill="#000000" />
+
+    <!-- 音波（上段の物体から発生） -->
+    <path d="M 287,51 A 26,26 0 0,1 287,85" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" />
+    <path d="M 299,40 A 42,42 0 0,1 299,96" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" />
+    <path d="M 311,29 A 58,58 0 0,1 311,107" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" />
+  </g>
+</svg>

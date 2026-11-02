@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 220" width="100%" height="100%">
+  <!-- ロボットアーム：台座 -->
+  <path d="M 15,190 L 81,190 L 75,178 L 21,178 Z" fill="#000000" />
+  <path d="M 38,157 L 58,157 L 61,178 L 35,178 Z" fill="#000000" />
+
+  <!-- ロボットアーム：関節 -->
+  <circle cx="48" cy="150" r="9.5" fill="none" stroke="#000000" stroke-width="9" />
+  <circle cx="76" cy="72" r="8.75" fill="none" stroke="#000000" stroke-width="8.5" />
+  <circle cx="130" cy="68" r="6.75" fill="none" stroke="#000000" stroke-width="6.5" />
+
+  <!-- ロボットアーム：リンク -->
+  <line x1="50.5" y1="142.9" x2="73.5" y2="79.1" stroke="#000000" stroke-width="18" stroke-linecap="butt" />
+  <line x1="83.5" y1="71.4" x2="124.0" y2="68.4" stroke="#000000" stroke-width="15" stroke-linecap="butt" />
+
+  <!-- ロボットアーム：グリッパー（上段の音源物体へアプローチ） -->
+  <path d="M 136,62 L 144,62 L 155,46 L 172,46 L 178,54 L 173,58 L 168,53 L 158,53 L 149,68 L 158,83 L 168,83 L 173,78 L 178,82 L 172,90 L 155,90 L 144,74 L 136,74 Z" fill="#000000" />
+
+  <!-- 物体1（上段：音・周波数情報を持つ物体、内部は透過抜き） -->
+  <path fill="#000000" fill-rule="evenodd" d="
+    M 194,46 L 226,46 A 6,6 0 0,1 232,52 L 232,84 A 6,6 0 0,1 226,90 L 194,90 A 6,6 0 0,1 188,84 L 188,52 A 6,6 0 0,1 194,46 Z
+    M 193,65 L 196,65 L 196,75 L 193,75 Z
+    M 198,59 L 201,59 L 201,81 L 198,81 Z
+    M 213,71.5 C 210,70 205,71.5 204,75 C 203,78.5 207,81 211.5,80 C 215,79 216.5,76.5 216.5,73.5 L 216.5,60 C 220,61.5 222,64.5 221.5,68.5 L 224.5,68.5 C 225.5,62.5 222,57.5 216.5,55 L 213,55 Z
+  " />
+
+  <!-- 物体2（下段：視覚的に同一な無音の物体） -->
+  <rect x="188" y="134" width="44" height="44" rx="6" fill="#000000" />
+
+  <!-- 音波（上段の物体から発生） -->
+  <path d="M 242,56 A 18,18 0 0,1 242,80" fill="none" stroke="#000000" stroke-width="4.5" stroke-linecap="round" />
+  <path d="M 251,49 A 30,30 0 0,1 251,87" fill="none" stroke="#000000" stroke-width="4.5" stroke-linecap="round" />
+
+  <!-- 分岐する点線矢印 -->
+  <line x1="263" y1="68" x2="280" y2="68" stroke="#000000" stroke-width="4" stroke-dasharray="5, 6, 6" stroke-linecap="round" />
+  <line x1="280" y1="52" x2="280" y2="158" stroke="#000000" stroke-width="4" stroke-dasharray="6, 5.7" stroke-linecap="round" />
+  <line x1="280" y1="52" x2="299" y2="52" stroke="#000000" stroke-width="4" stroke-dasharray="5, 4.5" stroke-linecap="round" />
+  <line x1="280" y1="158" x2="299" y2="158" stroke="#000000" stroke-width="4" stroke-dasharray="5, 4.5" stroke-linecap="round" />
+  <path d="M 295,44 L 307,52 L 295,60 Z" fill="#000000" />
+  <path d="M 295,150 L 307,158 L 295,166 Z" fill="#000000" />
+
+  <!-- 搬送先1（上段コンテナ：音色A ♪） -->
+  <path d="M 312,26 L 318,26 L 323,76 L 361,76 L 366,26 L 372,26" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+  <ellipse cx="338" cy="60" rx="6.5" ry="4.8" transform="rotate(-20 338 60)" fill="#000000" />
+  <line x1="343" y1="59" x2="343" y2="35" stroke="#000000" stroke-width="3.8" stroke-linecap="round" />
+  <path d="M 343,35 C 350,37 354,43 352,50" fill="none" stroke="#000000" stroke-width="3.8" stroke-linecap="round" />
+
+  <!-- 搬送先2（下段コンテナ：音色B ♫） -->
+  <path d="M 312,132 L 318,132 L 323,182 L 361,182 L 366,132 L 372,132" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+  <ellipse cx="332" cy="168" rx="5.5" ry="4" transform="rotate(-20 332 168)" fill="#000000" />
+  <ellipse cx="349" cy="165" rx="5.5" ry="4" transform="rotate(-20 349 165)" fill="#000000" />
+  <line x1="336.5" y1="167" x2="336.5" y2="144" stroke="#000000" stroke-width="3.4" stroke-linecap="round" />
+  <line x1="353.5" y1="164" x2="353.5" y2="141" stroke="#000000" stroke-width="3.4" stroke-linecap="round" />
+  <path d="M 335,142 L 355,139 L 355,145 L 335,148 Z" fill="#000000" />
+</svg>

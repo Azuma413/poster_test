@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 220" width="100%" height="100%">
+  <!-- ロボットアーム：台座 -->
+  <path d="M 20,195 L 90,195 L 84,183 L 26,183 Z" fill="#000000" />
+  <path d="M 45,162 L 65,162 L 68,183 L 42,183 Z" fill="#000000" />
+
+  <!-- ロボットアーム：関節 -->
+  <circle cx="55" cy="155" r="9.5" fill="none" stroke="#000000" stroke-width="9" />
+  <circle cx="88" cy="88" r="8.75" fill="none" stroke="#000000" stroke-width="8.5" />
+  <circle cx="142" cy="105" r="6.75" fill="none" stroke="#000000" stroke-width="6.5" />
+
+  <!-- ロボットアーム：リンク -->
+  <line x1="58.3" y1="148.3" x2="84.7" y2="94.7" stroke="#000000" stroke-width="18" stroke-linecap="butt" />
+  <line x1="95.2" y1="90.3" x2="136.3" y2="103.2" stroke="#000000" stroke-width="15" stroke-linecap="butt" />
+
+  <!-- ロボットアーム：グリッパー（物体を把持） -->
+  <path d="M 148,99 L 156,99 L 168,75 L 198,75 L 198,82 L 172,82 L 162,102 L 162,108 L 172,128 L 198,128 L 198,135 L 168,135 L 156,111 L 148,111 Z" fill="#000000" />
+
+  <!-- 音を発する1つの物体 -->
+  <rect x="176" y="82" width="46" height="46" rx="6" fill="#000000" />
+
+  <!-- 物体から出る音波 -->
+  <path d="M 233,92 A 20,20 0 0,1 233,118" fill="none" stroke="#000000" stroke-width="4.5" stroke-linecap="round" />
+  <path d="M 243,84 A 32,32 0 0,1 243,126" fill="none" stroke="#000000" stroke-width="4.5" stroke-linecap="round" />
+
+  <!-- 聴覚認識シンボル（耳と音符） -->
+  <g transform="translate(5, 18)">
+    <ellipse cx="108" cy="152" rx="5.5" ry="4" transform="rotate(-20 108 152)" fill="#000000" />
+    <line x1="112.5" y1="151" x2="112.5" y2="128" stroke="#000000" stroke-width="3.2" stroke-linecap="round" />
+    <path d="M 112.5,128 C 118,130 122,135 120,142" fill="none" stroke="#000000" stroke-width="3.2" stroke-linecap="round" />
+    <path d="M 122,138 A 12,12 0 0,1 122,152" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" />
+    <path d="M 128,132 C 128,118 152,118 152,135 C 152,146 143,150 141,158 C 139,165 130,165 128,157" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" />
+    <path d="M 134,133 C 134,126 145,126 145,135 C 145,141 138,144 137,149" fill="none" stroke="#000000" stroke-width="3.2" stroke-linecap="round" />
+  </g>
+
+  <!-- 分岐する点線矢印 -->
+  <line x1="255" y1="105" x2="274" y2="105" stroke="#000000" stroke-width="4" stroke-dasharray="5, 4.5" stroke-linecap="round" />
+  <line x1="274" y1="105" x2="274" y2="52" stroke="#000000" stroke-width="4" stroke-dasharray="6, 5.7" stroke-linecap="round" />
+  <line x1="274" y1="105" x2="274" y2="158" stroke="#000000" stroke-width="4" stroke-dasharray="6, 5.7" stroke-linecap="round" />
+  <line x1="274" y1="52" x2="294" y2="52" stroke="#000000" stroke-width="4" stroke-dasharray="5, 5" stroke-linecap="round" />
+  <line x1="274" y1="158" x2="294" y2="158" stroke="#000000" stroke-width="4" stroke-dasharray="5, 5" stroke-linecap="round" />
+  <path d="M 290,44 L 302,52 L 290,60 Z" fill="#000000" />
+  <path d="M 290,150 L 302,158 L 290,166 Z" fill="#000000" />
+
+  <!-- 搬送先1（上段コンテナ：音色A ♪） -->
+  <path d="M 306,26 L 312,26 L 317,76 L 355,76 L 360,26 L 366,26" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+  <ellipse cx="332" cy="60" rx="6.5" ry="4.8" transform="rotate(-20 332 60)" fill="#000000" />
+  <line x1="337" y1="59" x2="337" y2="35" stroke="#000000" stroke-width="3.8" stroke-linecap="round" />
+  <path d="M 337,35 C 344,37 348,43 346,50" fill="none" stroke="#000000" stroke-width="3.8" stroke-linecap="round" />
+
+  <!-- 搬送先2（下段コンテナ：音色B ♫） -->
+  <path d="M 306,132 L 312,132 L 317,182 L 355,182 L 360,132 L 366,132" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+  <ellipse cx="326" cy="168" rx="5.5" ry="4" transform="rotate(-20 326 168)" fill="#000000" />
+  <ellipse cx="343" cy="165" rx="5.5" ry="4" transform="rotate(-20 343 165)" fill="#000000" />
+  <line x1="330.5" y1="167" x2="330.5" y2="144" stroke="#000000" stroke-width="3.4" stroke-linecap="round" />
+  <line x1="347.5" y1="164" x2="347.5" y2="141" stroke="#000000" stroke-width="3.4" stroke-linecap="round" />
+  <path d="M 329,142 L 349,139 L 349,145 L 329,148 Z" fill="#000000" />
+</svg>

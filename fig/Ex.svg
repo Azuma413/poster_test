@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 220" width="100%" height="100%">
+  <g transform="translate(20, 0)">
+    <!-- ロボットアーム：台座 -->
+    <path d="M 20,190 L 90,190 L 84,178 L 26,178 Z" fill="#000000" />
+    <path d="M 45,157 L 65,157 L 68,178 L 42,178 Z" fill="#000000" />
+
+    <!-- ロボットアーム：関節 -->
+    <circle cx="55" cy="150" r="9.5" fill="none" stroke="#000000" stroke-width="9" />
+    <circle cx="85" cy="72" r="8.75" fill="none" stroke="#000000" stroke-width="8.5" />
+    <circle cx="142" cy="68" r="6.75" fill="none" stroke="#000000" stroke-width="6.5" />
+
+    <!-- ロボットアーム：リンク -->
+    <line x1="57.7" y1="143.0" x2="82.3" y2="79.0" stroke="#000000" stroke-width="18" stroke-linecap="butt" />
+    <line x1="92.5" y1="71.5" x2="136.0" y2="68.4" stroke="#000000" stroke-width="15" stroke-linecap="butt" />
+
+    <!-- ロボットアーム：グリッパー（上段の物体を把持して揺さぶっている） -->
+    <path d="M 148,62 L 160,62 L 174,38 L 210,38 L 210,45 L 178,45 L 166,65 L 166,71 L 178,91 L 210,91 L 210,98 L 174,98 L 160,74 L 148,74 Z" fill="#000000" />
+
+    <!-- モーションライン（グリッパーを前後に動かすスピード線） -->
+    <line x1="148" y1="46" x2="165" y2="46" stroke="#000000" stroke-width="3.2" stroke-linecap="round" />
+    <line x1="154" y1="53" x2="169" y2="53" stroke="#000000" stroke-width="3.2" stroke-linecap="round" />
+    <line x1="154" y1="83" x2="169" y2="83" stroke="#000000" stroke-width="3.2" stroke-linecap="round" />
+    <line x1="148" y1="90" x2="165" y2="90" stroke="#000000" stroke-width="3.2" stroke-linecap="round" />
+
+    <!-- 能動的探索（前後に動かす双方向矢印 ↔） -->
+    <line x1="142" y1="114" x2="182" y2="114" stroke="#000000" stroke-width="4.5" />
+    <path d="M 145,106 L 132,114 L 145,122 Z" fill="#000000" />
+    <path d="M 179,106 L 192,114 L 179,122 Z" fill="#000000" />
+
+    <!-- 物体1（上段：動かされて音を発している物体） -->
+    <rect x="196" y="45" width="46" height="46" rx="6" fill="#000000" />
+
+    <!-- 物体2（下段：視覚的に同一な静止物体） -->
+    <rect x="196" y="142" width="46" height="46" rx="6" fill="#000000" />
+
+    <!-- 揺さぶりによる上下の振動波 -->
+    <path d="M 215,31 A 14,14 0 0,1 233,31" fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" />
+    <path d="M 210,25 A 22,22 0 0,1 238,25" fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" />
+    <path d="M 233,105 A 14,14 0 0,1 215,105" fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" />
+    <path d="M 238,111 A 22,22 0 0,1 210,111" fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" />
+
+    <!-- 発生した音波（右側） -->
+    <path d="M 255,51 A 26,26 0 0,1 255,85" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" />
+    <path d="M 267,40 A 42,42 0 0,1 267,96" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" />
+    <path d="M 279,29 A 58,58 0 0,1 279,107" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" />
+  </g>
+</svg>
