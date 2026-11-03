@@ -31,6 +31,10 @@ env = Image.open(os.path.join(root, 'fig', 'PXL_20260520_083719104.jpg')).conver
 W, H = env.size
 save(env.crop((int(W * 0.14402), int(H * 0.14170), int(W * (1 - 0.12138)), int(H * (1 - 0.26031)))), 'env_crop.jpg', 1400)
 
+# --- two visually identical cans (exploratory task) for the Environment block
+cans = Image.open(os.path.join(root, 'fig', 'PXL_20260519_164846892.MP.jpg')).convert('RGB')
+save(cans.crop((1120, 1700, 3240, 2900)), 'cans.jpg', 1200)
+
 # --- real spectrogram (bottom-right quadrant of the real-robot observation grid)
 obs = Image.open(os.path.join(root, 'fig', 'untitled-f000080.png')).convert('RGB')
 save(obs.crop((960, 540, 1495, 1080)), 'real_spec.png')

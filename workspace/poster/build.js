@@ -242,7 +242,9 @@ const CAP = { WHERE: [ORANGE, ORANGE_L], WHAT: [GREEN, GREEN_L], EXPLORE: [BLUE,
   const micY = envImY + envImH + 0.15;
   img('icon_mic.png', envX + 0.2, micY, 0.7, 0.7);
   label('Microphone\nArrays', envX + 1.0, micY - 0.07, envW - 1.1, 0.85, { align: 'left', fontSize: 22 });
-  label('Ambiguous visuals', envX, by + bh - 0.42, envW, 0.4, { fontSize: 20, color: MUTED, bold: false });
+  const canH = by + bh - 0.55 - (micY + 0.85), canW = envW - 0.3, canX = envX + 0.15;
+  img('cans.jpg', canX, micY + 0.85, canW, canH, { sizing: { type: 'cover', w: canW, h: canH } });
+  label('Ambiguous visuals', envX, by + bh - 0.45, envW, 0.4, { fontSize: 20, color: MUTED, bold: false });
 
   // ---- three pipeline rows: title band (right-aligned) + images + note beside + encoder
   const rowGap = 0.12, rowH = (bh - 2 * rowGap) / 3;
@@ -330,11 +332,11 @@ const CAP = { WHERE: [ORANGE, ORANGE_L], WHAT: [GREEN, GREEN_L], EXPLORE: [BLUE,
 
   // ---- tasks (real robot photos)
   box(tskX, by, tskW, bh, 'F3E3F5', 'F3E3F5');
-  const tiw = tskW - 0.2, tih = tiw * 0.75;
-  img('photo_li.jpg', tskX + 0.1, by + 0.1, tiw, tih);
-  label('Localization &\nidentification', tskX - 0.2, by + 0.12 + tih, tskW + 0.4, 0.7, { fontSize: 20 });
-  img('photo_ex.jpg', tskX + 0.1, by + 0.95 + tih, tiw, tih);
-  label('Exploratory\nbehavior', tskX - 0.2, by + 0.97 + 2 * tih, tskW + 0.4, 0.7, { fontSize: 20 });
+  const tiw = tskW - 0.2, tih = (bh - 0.15 - 2 * 0.7 - 0.25) / 2;
+  img('photo_li.jpg', tskX + 0.1, by + 0.15, tiw, tih, { sizing: { type: 'cover', w: tiw, h: tih } });
+  label('Localization &\nidentification', tskX - 0.2, by + 0.17 + tih, tskW + 0.4, 0.7, { fontSize: 20 });
+  img('photo_ex.jpg', tskX + 0.1, by + 1.1 + tih, tiw, tih, { sizing: { type: 'cover', w: tiw, h: tih } });
+  label('Exploratory\nbehavior', tskX - 0.2, by + 1.12 + 2 * tih, tskW + 0.4, 0.7, { fontSize: 20 });
   arrow(polX + polW, by + bh / 2, tskX, by + bh / 2, NAVY, 3);
 }
 
