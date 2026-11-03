@@ -118,7 +118,7 @@ text([
 // column geometry
 const Y0 = HH + 0.3, YEND = 22.6, GAP = 0.3;
 const LX = 0.4, LW = 14.4, MX = 15.15, MW = 17.7, RX = 33.2, RW = 14.4;
-const BG_H = 9.1, FW_H = 7.4, CC_H = 4.2, CT_H = 5.6, RR_H = YEND - Y0 - CC_H - CT_H - 2 * GAP;
+const BG_H = 8.9, FW_H = 7.4, CC_H = 4.2, CT_H = 6.2, RR_H = YEND - Y0 - CC_H - CT_H - 2 * GAP;
 const ERR = {};   // chart title -> per-series STD, injected as error bars by fix_pptx.py
 
 // ============================ LEFT: BACKGROUND ====================================
@@ -129,7 +129,7 @@ const ERR = {};   // chart title -> per-series STD, injected as error bars by fi
   bullets([
     ['Vision-only policies fail when objects ', B('look identical'), ' or their state is ', B('hidden'), ' [1, 2].'],
     ['Sound tells ', C('WHERE'), ' a source is and ', C('WHAT'), ' it is [3].'],
-    ['Prior audio imitation learning uses single or contact mics → spectrograms / raw waveforms, so the ', B('source position stays implicit'), ' [1, 2, 4].'],
+    ['Existing audio policies use only ', B('spectral'), ' cues; ', B('acoustic spatial'), ' cues have not been given to a manipulation policy [1, 2, 4, 15].'],
   ], { x: p.x, y: p.y, w: tw, h: ih + 0.45 });
   captioned('bg_sort.jpg', p.x + tw + 0.35, p.y, iw, ih, 'Sort by acoustic cues');
   // comparison with prior work
@@ -137,16 +137,19 @@ const ERR = {};   // chart title -> per-series STD, injected as error bars by fi
   const cell = (t, o) => ({ text: t, options: Object.assign({ fontFace: FONT, fontSize: 24, align: 'center', valign: 'middle', color: TXT, margin: 0.04 }, o || {}) });
   const hdr = (t, col) => cell(t, { bold: true, color: 'FFFFFF', fill: { color: col } });
   const lab = (t, f) => cell(t, Object.assign({ align: 'left', bold: true, color: NAVY, margin: [0.04, 0.04, 0.04, 0.12] }, f));
+  const yes = (col, f) => cell('✓', Object.assign({ bold: true, color: col, fontSize: 30 }, f));
+  const no = (f) => cell('–', Object.assign({ color: 'A0A8B8', fontSize: 30 }, f));
+  const alt = { fill: { color: 'EEF3FA' } }, ours = { fill: { color: SKY } };
   const rows = [
-    [hdr('', NAVY), hdr('Audio IL\n[1, 2, 4]', MUTED), hdr('Robot audition\n[3, 5, 6]', MUTED), hdr('S2A2\n(ours)', BLUE)],
-    [lab('Microphones', { fill: { color: 'EEF3FA' } }), cell('single / contact', { fill: { color: 'EEF3FA' } }), cell('arrays', { fill: { color: 'EEF3FA' } }), cell('arrays', { fill: { color: SKY }, bold: true })],
-    [lab('Representation', {}), cell('spectrogram, raw wave'), cell('DOA, separated sound'), cell('spatial map + spectrogram', { fill: { color: SKY }, bold: true })],
-    [lab('Used for', { fill: { color: 'EEF3FA' } }), cell('contact / object state', { fill: { color: 'EEF3FA' } }), cell('localization, tracking', { fill: { color: 'EEF3FA' } }), cell('manipulation policy', { fill: { color: SKY }, bold: true })],
+    [hdr('', NAVY), hdr('Robot\npolicy', NAVY), hdr('Acoustic\nspatial info', ORANGE), hdr('Spectral\ninfo', GREEN)],
+    [lab('Audio-VLA [15]', alt), yes(NAVY, alt), no(alt), yes(GREEN, alt)],
+    [lab('A-SLIP [16]', {}), no({}), yes(ORANGE, {}), yes(GREEN, {})],
+    [lab('S2A2 (ours)', Object.assign({ color: BLUE }, ours)), yes(NAVY, ours), yes(ORANGE, ours), yes(GREEN, ours)],
   ];
-  slide.addTable(rows, { x: p.x, y: ty, w: p.w, colW: [2.9, 3.5, 3.6, 3.8], rowH: [0.8, 0.72, 0.72, 0.72], border: { type: 'solid', color: 'C9D3E3', pt: 1 }, fontFace: FONT });
+  slide.addTable(rows, { x: p.x, y: ty, w: p.w, colW: [4.5, 3.1, 3.1, 3.1], rowH: [0.8, 0.62, 0.62, 0.62], border: { type: 'solid', color: 'C9D3E3', pt: 1 }, fontFace: FONT });
   bullets([
-    [C('→ '), B('First'), ' to feed array-based source position into a learned manipulation policy, as an explicit spatial map.'],
-  ], { x: p.x, y: ty + 2.96 + 0.15, w: p.w, h: p.bottom - (ty + 3.11), nobullet: true });
+    [C('→ S2A2: '), 'the first manipulation policy that ', B('explicitly'), ' uses acoustic spatial (', C('WHERE'), ') and spectral (', C('WHAT'), ') information.'],
+  ], { x: p.x, y: ty + 2.66 + 0.15, w: p.w, h: p.bottom - (ty + 2.81), nobullet: true });
 }
 
 // ============================ LEFT: TASKS =========================================
@@ -436,6 +439,8 @@ const CAP = { WHERE: [ORANGE, ORANGE_L], WHAT: [GREEN, GREEN_L], EXPLORE: [BLUE,
     '[12] Scheibler et al. Pyroomacoustics. ICASSP 2018.',
     '[13] van der Maaten & Hinton. t-SNE. JMLR 2008.',
     '[14] Wang et al. The sound of simulation. CoRL 2025.',
+    '[15] Wei et al. Audio-VLA. arXiv 2025.',
+    '[16] Yoo et al. A-SLIP. arXiv 2026.',
     'Acknowledgments: JST CREST (JPMJCR22D3), JST Moonshot R&D (JPMJMS2024), JSPS KAKENHI (JP26H02532, JP26H02525), RIKEN TRIP initiative (AGIS).',
   ].map((t, i, a) => ({ text: t, options: { breakLine: i < a.length - 1, paraSpaceBefore: t.startsWith('Ack') ? 6 : 0 } }));
   text(refs, { x: p.x + 7.0, y: p.y - 0.05, w: p.w - 7.0, h: p.h + 0.05, fontSize: 16, color: MUTED, lineSpacingMultiple: 1.0 });
