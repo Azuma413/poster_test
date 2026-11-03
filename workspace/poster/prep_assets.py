@@ -57,7 +57,7 @@ save(f4.crop((4064, 99, 4164, 2022)), 'tsne_cbar.png')
 
 # --- real robot sequence (Fig.5a: robot row + acoustic spatial map overlay row)
 f5 = Image.open(os.path.join(root, 'fig', 'fig5.png')).convert('RGB')
-save(f5.crop((0, 72, 1452, 536)), 'real_seq.png')
+save(f5.crop((0, 72, 1452, 776)), 'real_seq.png')   # robot / spatial map / spectrogram rows
 
 # --- logos ---------------------------------------------------------------------
 save(Image.open(os.path.join(root, 'ロゴ', 'E-C.png')).convert('RGBA'), 'kyoto.png')

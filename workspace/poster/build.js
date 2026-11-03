@@ -118,7 +118,7 @@ text([
 // column geometry
 const Y0 = HH + 0.3, YEND = 22.6, GAP = 0.3;
 const LX = 0.4, LW = 14.4, MX = 15.15, MW = 17.7, RX = 33.2, RW = 14.4;
-const BG_H = 4.85, FW_H = 7.4, RR_H = 8.2, CC_H = 4.2;
+const BG_H = 9.1, FW_H = 7.4, CC_H = 4.2, CT_H = 5.6, RR_H = YEND - Y0 - CC_H - CT_H - 2 * GAP;
 const ERR = {};   // chart title -> per-series STD, injected as error bars by fix_pptx.py
 
 // ============================ LEFT: BACKGROUND ====================================
@@ -128,10 +128,25 @@ const ERR = {};   // chart title -> per-series STD, injected as error bars by fi
   const tw = p.w - iw - 0.35;
   bullets([
     ['Vision-only policies fail when objects ', B('look identical'), ' or their state is ', B('hidden'), ' [1, 2].'],
-    ['Sound carries two complementary cues: ', C('WHERE'), ' the source is and ', C('WHAT'), ' it is [3].'],
-    ['Prior audio imitation learning feeds only spectrograms or raw waveforms, so the ', B('source position stays implicit'), ' [1, 2, 4].'],
-  ], { x: p.x, y: p.y, w: tw, h: p.h });
-  captioned('bg_sort.jpg', p.x + tw + 0.35, p.y + (p.h - ih - 0.45) / 2, iw, ih, 'Sort by acoustic cues');
+    ['Sound tells ', C('WHERE'), ' a source is and ', C('WHAT'), ' it is [3].'],
+    ['Prior audio imitation learning uses single or contact mics → spectrograms / raw waveforms, so the ', B('source position stays implicit'), ' [1, 2, 4].'],
+  ], { x: p.x, y: p.y, w: tw, h: ih + 0.45 });
+  captioned('bg_sort.jpg', p.x + tw + 0.35, p.y, iw, ih, 'Sort by acoustic cues');
+  // comparison with prior work
+  const ty = p.y + ih + 0.65;
+  const cell = (t, o) => ({ text: t, options: Object.assign({ fontFace: FONT, fontSize: 24, align: 'center', valign: 'middle', color: TXT, margin: 0.04 }, o || {}) });
+  const hdr = (t, col) => cell(t, { bold: true, color: 'FFFFFF', fill: { color: col } });
+  const lab = (t, f) => cell(t, Object.assign({ align: 'left', bold: true, color: NAVY, margin: [0.04, 0.04, 0.04, 0.12] }, f));
+  const rows = [
+    [hdr('', NAVY), hdr('Audio IL\n[1, 2, 4]', MUTED), hdr('Robot audition\n[3, 5, 6]', MUTED), hdr('S2A2\n(ours)', BLUE)],
+    [lab('Microphones', { fill: { color: 'EEF3FA' } }), cell('single / contact', { fill: { color: 'EEF3FA' } }), cell('arrays', { fill: { color: 'EEF3FA' } }), cell('arrays', { fill: { color: SKY }, bold: true })],
+    [lab('Representation', {}), cell('spectrogram, raw wave'), cell('DOA, separated sound'), cell('spatial map + spectrogram', { fill: { color: SKY }, bold: true })],
+    [lab('Used for', { fill: { color: 'EEF3FA' } }), cell('contact / object state', { fill: { color: 'EEF3FA' } }), cell('localization, tracking', { fill: { color: 'EEF3FA' } }), cell('manipulation policy', { fill: { color: SKY }, bold: true })],
+  ];
+  slide.addTable(rows, { x: p.x, y: ty, w: p.w, colW: [2.9, 3.5, 3.6, 3.8], rowH: [0.8, 0.72, 0.72, 0.72], border: { type: 'solid', color: 'C9D3E3', pt: 1 }, fontFace: FONT });
+  bullets([
+    [C('→ '), B('First'), ' to feed array-based source position into a learned manipulation policy, as an explicit spatial map.'],
+  ], { x: p.x, y: ty + 2.96 + 0.15, w: p.w, h: p.bottom - (ty + 3.11), nobullet: true });
 }
 
 // ============================ LEFT: TASKS =========================================
@@ -144,16 +159,16 @@ const CAP = { WHERE: [ORANGE, ORANGE_L], WHAT: [GREEN, GREEN_L], EXPLORE: [BLUE,
   ], { x: p.x, y: p.y, w: p.w, h: 1.1 });
   const cards = [
     { icon: 'icon_L.png', shot: 'task_L.png', title: 'Localization', need: ['WHERE'],
-      pts: ['2 look-alikes, 1 box', 'One emits a fixed sound', 'Carry the sounding one'] },
+      pts: ['2 look-alikes, 1 box', 'One emits a sound', 'Carry the sounder'] },
     { icon: 'icon_I.png', shot: 'task_I.png', title: 'Identification', need: ['WHAT'],
       pts: ['1 object, 2 boxes', 'It emits sound A or B', 'Box chosen by timbre'] },
     { icon: 'icon_LI.png', shot: 'task_LI.png', title: 'L&I', need: ['WHERE', 'WHAT'],
-      pts: ['2 look-alikes, 2 boxes', 'One emits sound A or B', 'Find it, box by timbre'] },
+      pts: ['2 look-alikes, 2 boxes', 'One emits A or B', 'Find it, box by timbre'] },
     { icon: 'icon_Ex.png', shot: 'task_Ex.png', title: 'Exploratory', need: ['WHERE', 'WHAT', 'EXPLORE'],
       pts: ['2 look-alikes, 1 box', 'One sounds only when moved', 'Lift & shake to find it'] },
   ];
-  const rowH = 0.55, tableH = 5 * rowH, cw = (p.w - 0.3) / 2, cy0 = p.y + 1.2;
-  const ch = (p.bottom - tableH - 0.35 - cy0 - 0.25) / 2;
+  const cw = (p.w - 0.3) / 2, cy0 = p.y + 1.2;
+  const ch = (p.bottom - cy0 - 0.25) / 2;
   const rightW = 1.95, iconH = rightW * 695 / 1200;
   cards.forEach((c, i) => {
     const cx = p.x + (i % 2) * (cw + 0.3), cy = cy0 + Math.floor(i / 2) * (ch + 0.25);
@@ -168,22 +183,11 @@ const CAP = { WHERE: [ORANGE, ORANGE_L], WHAT: [GREEN, GREEN_L], EXPLORE: [BLUE,
       px += pw + 0.1;
     });
     img(c.icon, rx, cy + 0.12, rightW, iconH);
-    img(c.shot, rx, cy + ch - rightW - 0.15, rightW, rightW);
-    label('overhead view', rx, cy + ch - rightW - 0.15 - 0.36, rightW, 0.34, { fontSize: 20, color: MUTED, bold: false });
+    const shot = 1.8;
+    img(c.shot, rx + (rightW - shot) / 2, cy + ch - shot - 0.15, shot, shot);
+    label('overhead view', rx - 0.1, cy + ch - shot - 0.15 - 0.36, rightW + 0.2, 0.34, { fontSize: 20, color: MUTED, bold: false });
     bullets(c.pts, { x: cx + 0.25, y: cy + 1.35, w: lw, h: ch - 1.4, gap: 2 });
   });
-  // capability table (Table 1 of the paper)
-  const ty = p.bottom - tableH;
-  const cell = (t, o) => ({ text: t, options: Object.assign({ fontFace: FONT, fontSize: 24, align: 'center', valign: 'middle', color: TXT, margin: 0.03 }, o || {}) });
-  const hdr = (t, col) => cell(t, { bold: true, color: 'FFFFFF', fill: { color: col } });
-  const chk = (yes, col, o) => cell(yes ? '✓' : '–', Object.assign({ bold: true, color: yes ? col : 'A0A8B8', fontSize: 26 }, o || {}));
-  const rowsT = [['Localization', 1, 0, 0], ['Identification', 0, 1, 0], ['L&I', 1, 1, 0], ['Exploratory', 1, 1, 1]];
-  const rowsOut = [[hdr('Task', NAVY), hdr('Spatial (WHERE)', ORANGE), hdr('Spectral (WHAT)', GREEN), hdr('Explore', BLUE)]];
-  rowsT.forEach(([n, a, b, c], i) => {
-    const f = { fill: { color: i % 2 ? 'FFFFFF' : 'EEF3FA' } };
-    rowsOut.push([cell(n, Object.assign({ align: 'left', bold: true, color: NAVY, margin: [0.03, 0.03, 0.03, 0.15] }, f)), chk(a, ORANGE, f), chk(b, GREEN, f), chk(c, BLUE, f)]);
-  });
-  slide.addTable(rowsOut, { x: p.x, y: ty, w: p.w, colW: [4.6, 3.3, 3.3, 2.6], rowH, border: { type: 'solid', color: 'C9D3E3', pt: 1 }, fontFace: FONT });
 }
 
 // ============================ MIDDLE: FRAMEWORK ===================================
@@ -359,8 +363,8 @@ const CAP = { WHERE: [ORANGE, ORANGE_L], WHAT: [GREEN, GREEN_L], EXPLORE: [BLUE,
 // ============================ RIGHT: REAL ROBOT ===================================
 {
   const p = panel(RX, Y0, RW, RR_H, 'Real Robot Results');
-  const ph = 3.0, pw = ph / 0.625;
-  captioned('real_env.jpg', p.x, p.y, pw, ph, 'Top-down view, 4 microphone arrays');
+  const ph = 2.6, pw = ph / 0.625;
+  captioned('real_env.jpg', p.x, p.y, pw, ph, 'Top-down view, 4 mic arrays');
   bullets([
     ['ILOHA arm (ALOHA-type [7]): 6 joints + gripper'],
     ['4 TAMAGO-03 arrays (8 ch, 16 kHz); top-down + wrist RGB'],
@@ -382,11 +386,11 @@ const CAP = { WHERE: [ORANGE, ORANGE_L], WHAT: [GREEN, GREEN_L], EXPLORE: [BLUE,
   // callout on the S2A2 bar of the L&I task
   label('×14 vs\nvision only', p.x + 2.95, cy + 0.72, 1.8, 0.7, { fontSize: 20, color: ORANGE, align: 'left' });
   arrow(p.x + 2.95, cy + 1.3, p.x + 2.2, cy + 1.85, ORANGE, 2.5);
-  const sx = p.x + cw + 0.3, sw = p.w - cw - 0.3, sh = sw * 464 / 1452;
+  const sx = p.x + cw + 0.3, sw = p.w - cw - 0.3, sh = sw * 704 / 1452;
   const blockH = 0.45 + sh + 0.67, sy = cy + (ch - blockH) / 2;
-  label('S2A2 + ACT on the exploratory task', sx, sy, sw, 0.42, { fontSize: 22 });
+  label('S2A2 + ACT on the exploratory task  (time →)', sx, sy, sw, 0.42, { fontSize: 22 });
   img('real_seq.png', sx, sy + 0.45, sw, sh);
-  label('Top: robot.  Bottom: acoustic spatial map on the top-down view.  Time →', sx, sy + 0.47 + sh, sw, 0.65, { fontSize: 20, color: MUTED, bold: false });
+  label('Top: robot.  Middle: acoustic spatial map on the top-down view.  Bottom: spectrogram.', sx, sy + 0.47 + sh, sw, 0.65, { fontSize: 20, color: MUTED, bold: false });
 }
 
 // ============================ RIGHT: CONCLUSION ===================================
@@ -403,7 +407,7 @@ const CAP = { WHERE: [ORANGE, ORANGE_L], WHAT: [GREEN, GREEN_L], EXPLORE: [BLUE,
 // ============================ RIGHT: CONTACT & REFERENCES ==========================
 {
   const PY = Y0 + RR_H + GAP + CC_H + GAP;
-  const p = panel(RX, PY, RW, YEND - PY, 'Contact & References');
+  const p = panel(RX, PY, RW, CT_H, 'Contact & References');
   text([
     { text: 'Kaneyoshi Hiratsuka', options: { bold: true, breakLine: true } },
     { text: 'Kyoto University / RIKEN', options: { breakLine: true } },
