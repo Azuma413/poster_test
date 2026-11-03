@@ -26,6 +26,18 @@ save(media('spatial_map_224.png').convert('RGB'), 'spatial_map.png')      # acou
 save(media('photo_li.jpeg').convert('RGB'),       'photo_li.jpg', 1400)   # L&I real robot
 save(media('corl_logo.png').convert('RGBA'),      'corl_logo.png')
 
+# --- environment photo used in the framework figure (same crop as the previous poster)
+env = Image.open(os.path.join(root, 'fig', 'PXL_20260520_083719104.jpg')).convert('RGB')
+W, H = env.size
+save(env.crop((int(W * 0.14402), int(H * 0.14170), int(W * (1 - 0.12138)), int(H * (1 - 0.26031)))), 'env_crop.jpg', 1400)
+
+# --- real spectrogram (bottom-right quadrant of the real-robot observation grid)
+obs = Image.open(os.path.join(root, 'fig', 'untitled-f000080.png')).convert('RGB')
+save(obs.crop((960, 540, 1495, 1080)), 'real_spec.png')
+
+# --- simulation top-down view for the setup diagram (same crop as the previous poster)
+save(Image.open(os.path.join(root, 'fig', 'observation.images.front.png')).convert('RGB').crop((0, 0, 456, 400)), 'sim_topdown.png')
+
 # --- real environment photo (top-down, 4 arrays) ----------------------------
 im = Image.open(os.path.join(root, 'fig', 'PXL_20260520_083719104.jpg')).convert('RGB')
 save(im.crop((0, 0, 4000, 2500)), 'real_env.jpg', 1600)   # drop the operator's legs at the bottom
