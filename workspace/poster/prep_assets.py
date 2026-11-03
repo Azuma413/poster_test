@@ -19,7 +19,7 @@ SM = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src_media')
 def media(n): return Image.open(os.path.join(SM, n))
 
 save(media('illust_hidden_state.png').convert('RGB'),  'bg_hidden.jpg', 1200)
-save(media('illust_sort_by_sound.png').convert('RGB'), 'bg_sort.jpg', 1200)
+save(media('illust_sort_by_sound.png').convert('RGB').crop((0, 135, 1024, 817)), 'bg_sort.jpg', 1200)   # same 3:2 crop as the previous poster
 save(media('wrist_cam_224.png').convert('RGB'),   'cam_wrist.png')        # wrist camera (RGB image example)
 save(media('top_cam_224.png').convert('RGB'),     'cam_top_small.png')    # top-down w/ 4 arrays
 save(media('spatial_map_224.png').convert('RGB'), 'spatial_map.png')      # acoustic spatial map example
@@ -38,6 +38,14 @@ save(sim.crop((420, 0, 960, 540)),    'sim_front.png')
 save(sim.crop((960, 0, 1500, 540)),   'sim_top.png')
 save(sim.crop((420, 540, 960, 1080)), 'sim_map.png')
 save(sim.crop((960, 540, 1500, 1080)),'sim_spec.png')
+
+# --- t-SNE panels (Fig.4a): rows = sound type / source Y-coordinate, cols = Baseline, S2A2, w/o Spec., w/o Spat.
+f4 = Image.open(os.path.join(root, 'fig', 'fig4.png')).convert('RGB')
+cols = [(107, 862), (892, 1648), (1678, 2434), (2464, 3220)]
+rows = [(104, 1011), (1111, 2018)]
+for r, (y0, y1) in enumerate(rows):
+    for c, (x0, x1) in enumerate(cols):
+        save(f4.crop((x0 + 4, y0 + 4, x1 - 4, y1 - 4)), f'tsne_r{r}_c{c}.png', 600)
 
 # --- real robot sequence (Fig.5a: robot row + acoustic spatial map overlay row)
 f5 = Image.open(os.path.join(root, 'fig', 'fig5.png')).convert('RGB')
