@@ -47,6 +47,14 @@ for r, (y0, y1) in enumerate(rows):
     for c, (x0, x1) in enumerate(cols):
         save(f4.crop((x0 + 4, y0 + 4, x1 - 4, y1 - 4)), f'tsne_r{r}_c{c}.png', 600)
 
+# --- per-task overhead views (top-right quadrant of the task screenshots)
+for name, f in [('task_L', 'sound1.png'), ('task_I', 'soundDiff.png'), ('task_LI', 'soundSim1.png'), ('task_Ex', 'soundShake1.png')]:
+    t = Image.open(os.path.join(root, 'fig', 'task', f)).convert('RGB')
+    save(t.crop((960, 0, 1500, 540)), name + '.png')
+
+# --- colour bar strip of Fig.4 (viridis, Y-coordinate of the source)
+save(f4.crop((4064, 99, 4164, 2022)), 'tsne_cbar.png')
+
 # --- real robot sequence (Fig.5a: robot row + acoustic spatial map overlay row)
 f5 = Image.open(os.path.join(root, 'fig', 'fig5.png')).convert('RGB')
 save(f5.crop((0, 72, 1452, 536)), 'real_seq.png')

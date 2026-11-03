@@ -99,9 +99,8 @@ slide.addShape(pres.ShapeType.roundRect, { x: 0.4, y: 0.3, w: 7.4, h: 2.4, fill:
 img('kyoto.png', 0.55, 0.4, 2.2, 2.2);
 img('riken.png', 3.0, 0.45, 3.6, 1.1);
 img('mmai.png', 3.3, 1.65, 3.0, 1.0);
-slide.addShape(pres.ShapeType.roundRect, { x: 40.9, y: 0.3, w: 6.7, h: 2.4, fill: { color: '000000' }, line: { color: '000000', width: 0 }, rectRadius: 0.15 });
-img('corl_logo.png', 41.25, 0.32, 6.0, 1.9 * 0.95);
-text('Austin, TX · 2026', { x: 40.9, y: 2.15, w: 6.7, h: 0.5, fontSize: 28, color: 'FFFFFF', align: 'center', valign: 'middle' });
+img('corl_logo.png', 42.2, 0.12, 4.8, 2.4);
+text('Austin, TX · 2026', { x: 41.5, y: 2.5, w: 6.2, h: 0.45, fontSize: 28, color: 'FFFFFF', align: 'center', valign: 'middle' });
 
 text('S2A2: Audio-Visual Imitation Learning for Manipulation Tasks\nUsing Acoustic Spatial Information',
   { x: 8.2, y: 0.15, w: 32.4, h: 1.75, fontSize: 56, bold: true, color: 'FFFFFF', align: 'center', valign: 'middle', lineSpacingMultiple: 0.95 });
@@ -119,12 +118,13 @@ text([
 // column geometry
 const Y0 = HH + 0.3, YEND = 22.6, GAP = 0.3;
 const LX = 0.4, LW = 14.4, MX = 15.15, MW = 17.7, RX = 33.2, RW = 14.4;
-const BG_H = 5.6, FW_H = 7.4, RR_H = 8.5, CC_H = 4.2;
+const BG_H = 4.85, FW_H = 7.4, RR_H = 8.2, CC_H = 4.2;
+const ERR = {};   // chart title -> per-series STD, injected as error bars by fix_pptx.py
 
 // ============================ LEFT: BACKGROUND ====================================
 {
   const p = panel(LX, Y0, LW, BG_H, 'Background');
-  const ih = 3.2, iw = ih * 1.5;               // illustration, 3:2 crop as in the previous poster
+  const ih = 3.15, iw = ih * 1.5;              // illustration, 3:2 crop as in the previous poster
   const tw = p.w - iw - 0.35;
   bullets([
     ['Vision-only policies fail when objects ', B('look identical'), ' or their state is ', B('hidden'), ' [1, 2].'],
@@ -135,6 +135,7 @@ const BG_H = 5.6, FW_H = 7.4, RR_H = 8.5, CC_H = 4.2;
 }
 
 // ============================ LEFT: TASKS =========================================
+const CAP = { WHERE: [ORANGE, ORANGE_L], WHAT: [GREEN, GREEN_L], EXPLORE: [BLUE, SKY] };
 {
   const PY = Y0 + BG_H + GAP;
   const p = panel(LX, PY, LW, YEND - PY, 'Acoustic-aware Manipulation Tasks');
@@ -142,39 +143,47 @@ const BG_H = 5.6, FW_H = 7.4, RR_H = 8.5, CC_H = 4.2;
     ['Four ', B('diagnostic tasks'), ' that isolate ', C('localization'), ', ', C('identification'), ' and ', C('exploration'), '. Goal: grasp the right object, drop it into the right box.'],
   ], { x: p.x, y: p.y, w: p.w, h: 1.1 });
   const cards = [
-    { icon: 'icon_L.png', title: 'Localization', need: 'WHERE', fill: ORANGE_L, lc: ORANGE,
-      pts: ['2 identical objects, one emits sound', 'Transport the sounding one'] },
-    { icon: 'icon_I.png', title: 'Identification', need: 'WHAT', fill: GREEN_L, lc: GREEN,
-      pts: ['1 object emits sound A or B', 'Destination box depends on the timbre'] },
-    { icon: 'icon_LI.png', title: 'L&I', need: 'WHERE + WHAT', fill: SKY, lc: BLUE,
-      pts: ['2 identical objects, one emits A or B', 'Pick the sounding one, box by timbre'] },
-    { icon: 'icon_Ex.png', title: 'Exploratory', need: 'WHERE + WHAT + EXPLORE', fill: SKY, lc: BLUE,
-      pts: ['Silent at rest, one sounds when moved', 'Lift and shake each, place the sounding one'] },
+    { icon: 'icon_L.png', shot: 'task_L.png', title: 'Localization', need: ['WHERE'],
+      pts: ['2 look-alikes, 1 box', 'One emits a fixed sound', 'Carry the sounding one'] },
+    { icon: 'icon_I.png', shot: 'task_I.png', title: 'Identification', need: ['WHAT'],
+      pts: ['1 object, 2 boxes', 'It emits sound A or B', 'Box chosen by timbre'] },
+    { icon: 'icon_LI.png', shot: 'task_LI.png', title: 'L&I', need: ['WHERE', 'WHAT'],
+      pts: ['2 look-alikes, 2 boxes', 'One emits sound A or B', 'Find it, box by timbre'] },
+    { icon: 'icon_Ex.png', shot: 'task_Ex.png', title: 'Exploratory', need: ['WHERE', 'WHAT', 'EXPLORE'],
+      pts: ['2 look-alikes, 1 box', 'One sounds only when moved', 'Lift & shake to find it'] },
   ];
-  const tableH = 5 * 0.5, cw = (p.w - 0.3) / 2, cy0 = p.y + 1.2;
+  const rowH = 0.55, tableH = 5 * rowH, cw = (p.w - 0.3) / 2, cy0 = p.y + 1.2;
   const ch = (p.bottom - tableH - 0.35 - cy0 - 0.25) / 2;
+  const rightW = 1.95, iconH = rightW * 695 / 1200;
   cards.forEach((c, i) => {
     const cx = p.x + (i % 2) * (cw + 0.3), cy = cy0 + Math.floor(i / 2) * (ch + 0.25);
-    const iconW = 2.45, iconH = iconW * 695 / 1200;
-    box(cx, cy, cw, ch, 'F7F9FC', c.lc);
-    text(c.title, { x: cx + 0.25, y: cy + 0.12, w: cw - iconW - 0.6, h: 0.55, fontSize: 32, bold: true, color: NAVY, valign: 'middle' });
-    box(cx + 0.25, cy + 0.75, cw - iconW - 0.6, 0.5, c.fill, c.fill, 0.08);
-    text('needs: ' + c.need, { x: cx + 0.25, y: cy + 0.75, w: cw - iconW - 0.6, h: 0.5, fontSize: 20, bold: true, color: c.lc, align: 'center', valign: 'middle' });
-    img(c.icon, cx + cw - iconW - 0.15, cy + 0.12, iconW, iconH);
-    bullets(c.pts, { x: cx + 0.25, y: cy + 1.5, w: cw - 0.5, h: ch - 1.55, gap: 2 });
+    const lw = cw - rightW - 0.45, rx = cx + cw - rightW - 0.15;
+    box(cx, cy, cw, ch, 'F7F9FC', BLUE);
+    text(c.title, { x: cx + 0.25, y: cy + 0.12, w: lw, h: 0.55, fontSize: 32, bold: true, color: NAVY, valign: 'middle' });
+    let px = cx + 0.25;
+    c.need.forEach((n) => {
+      const pw = n.length * 0.17 + 0.35, [fg, bg] = CAP[n];
+      box(px, cy + 0.74, pw, 0.42, bg, bg, 0.1);
+      text(n, { x: px, y: cy + 0.74, w: pw, h: 0.42, fontSize: 20, bold: true, color: fg, align: 'center', valign: 'middle' });
+      px += pw + 0.1;
+    });
+    img(c.icon, rx, cy + 0.12, rightW, iconH);
+    img(c.shot, rx, cy + ch - rightW - 0.15, rightW, rightW);
+    label('overhead view', rx, cy + ch - rightW - 0.15 - 0.36, rightW, 0.34, { fontSize: 20, color: MUTED, bold: false });
+    bullets(c.pts, { x: cx + 0.25, y: cy + 1.35, w: lw, h: ch - 1.4, gap: 2 });
   });
   // capability table (Table 1 of the paper)
   const ty = p.bottom - tableH;
-  const hdr = { bold: true, color: 'FFFFFF', fill: { color: NAVY }, align: 'center', valign: 'middle', fontSize: 24 };
   const cell = (t, o) => ({ text: t, options: Object.assign({ fontFace: FONT, fontSize: 24, align: 'center', valign: 'middle', color: TXT, margin: 0.03 }, o || {}) });
-  const chk = (yes, o) => cell(yes ? '✓' : '–', Object.assign({ bold: true, color: yes ? BLUE : MUTED, fontSize: 26 }, o || {}));
+  const hdr = (t, col) => cell(t, { bold: true, color: 'FFFFFF', fill: { color: col } });
+  const chk = (yes, col, o) => cell(yes ? '✓' : '–', Object.assign({ bold: true, color: yes ? col : 'A0A8B8', fontSize: 26 }, o || {}));
   const rowsT = [['Localization', 1, 0, 0], ['Identification', 0, 1, 0], ['L&I', 1, 1, 0], ['Exploratory', 1, 1, 1]];
-  const rowsOut = [[cell('Task', hdr), cell('Spatial (WHERE)', hdr), cell('Spectral (WHAT)', hdr), cell('Explore', hdr)]];
+  const rowsOut = [[hdr('Task', NAVY), hdr('Spatial (WHERE)', ORANGE), hdr('Spectral (WHAT)', GREEN), hdr('Explore', BLUE)]];
   rowsT.forEach(([n, a, b, c], i) => {
     const f = { fill: { color: i % 2 ? 'FFFFFF' : 'EEF3FA' } };
-    rowsOut.push([cell(n, Object.assign({ align: 'left', bold: true, color: NAVY, margin: [0.03, 0.03, 0.03, 0.15] }, f)), chk(a, f), chk(b, f), chk(c, f)]);
+    rowsOut.push([cell(n, Object.assign({ align: 'left', bold: true, color: NAVY, margin: [0.03, 0.03, 0.03, 0.15] }, f)), chk(a, ORANGE, f), chk(b, GREEN, f), chk(c, BLUE, f)]);
   });
-  slide.addTable(rowsOut, { x: p.x, y: ty, w: p.w, colW: [4.6, 3.3, 3.3, 2.6], rowH: 0.5, border: { type: 'solid', color: 'C9D3E3', pt: 1 }, fontFace: FONT });
+  slide.addTable(rowsOut, { x: p.x, y: ty, w: p.w, colW: [4.6, 3.3, 3.3, 2.6], rowH, border: { type: 'solid', color: 'C9D3E3', pt: 1 }, fontFace: FONT });
 }
 
 // ============================ MIDDLE: FRAMEWORK ===================================
@@ -285,15 +294,21 @@ const BG_H = 5.6, FW_H = 7.4, RR_H = 8.5, CC_H = 4.2;
   const ly = p.y + si + 0.5;
   legendRow(p.x + 0.2, ly, [['Baseline (RGB only)', SER.base], ['S2A2 (ours)', SER.s2a2], ['w/o Spec. (no spectrogram)', SER.spec], ['w/o Spat. (no spatial map)', SER.spat]]);
   const cats = ['ACT', 'DP', 'VQ-BeT', 'π0'];
+  // mean and STD over 3 seeds (Table 2 of the paper)
   const sim = {
-    'Localization':   { base: [20.3, 13.3, 12.7, 18.3], s2a2: [73.0, 68.0, 40.3, 32.0], spec: [74.7, 68.3, 44.7, 17.3], spat: [15.3, 15.3, 12.3, 14.7] },
-    'Identification': { base: [39.3, 41.3, 24.0, 32.3], s2a2: [76.7, 67.7, 32.3, 73.3], spec: [44.3, 32.7, 32.7, 40.0], spat: [74.3, 80.3, 49.3, 78.7] },
-    'L&I':            { base: [11.0, 9.3, 7.7, 7.0],    s2a2: [78.7, 89.7, 55.3, 45.7], spec: [45.0, 46.0, 32.3, 14.3], spat: [25.7, 8.7, 19.0, 19.7] },
-    'Exploratory':    { base: [35.0, 26.3, 17.3, 9.0],  s2a2: [77.3, 44.0, 32.7, 18.7], spec: [75.3, 37.3, 20.0, 26.7], spat: [72.3, 6.3, 25.0, 9.3] },
+    'Localization':   { base: [20.3, 13.3, 12.7, 18.3], s2a2: [73.0, 68.0, 40.3, 32.0], spec: [74.7, 68.3, 44.7, 17.3], spat: [15.3, 15.3, 12.3, 14.7],
+                        sd: [[7.2, 1.2, 6.8, 2.3], [5.6, 3.6, 4.5, 9.9], [4.7, 13.7, 5.5, 5.0], [4.0, 1.2, 3.8, 5.7]] },
+    'Identification': { base: [39.3, 41.3, 24.0, 32.3], s2a2: [76.7, 67.7, 32.3, 73.3], spec: [44.3, 32.7, 32.7, 40.0], spat: [74.3, 80.3, 49.3, 78.7],
+                        sd: [[4.0, 2.5, 6.9, 2.1], [1.2, 7.2, 10.0, 8.4], [2.3, 3.1, 3.1, 11.4], [7.0, 3.8, 9.8, 6.0]] },
+    'L&I':            { base: [11.0, 9.3, 7.7, 7.0],    s2a2: [78.7, 89.7, 55.3, 45.7], spec: [45.0, 46.0, 32.3, 14.3], spat: [25.7, 8.7, 19.0, 19.7],
+                        sd: [[3.5, 6.1, 1.2, 4.0], [2.1, 2.1, 11.7, 8.1], [3.6, 5.3, 7.5, 2.9], [3.1, 3.8, 1.0, 3.8]] },
+    'Exploratory':    { base: [35.0, 26.3, 17.3, 9.0],  s2a2: [77.3, 44.0, 32.7, 18.7], spec: [75.3, 37.3, 20.0, 26.7], spat: [72.3, 6.3, 25.0, 9.3],
+                        sd: [[5.3, 0.6, 5.8, 1.0], [5.7, 3.6, 12.7, 4.2], [5.0, 8.1, 20.0, 3.2], [8.4, 2.3, 3.6, 10.4]] },
   };
   const cy0 = ly + 0.6, chH = 3.0, chW = (p.w - 0.45) / 4;
   Object.entries(sim).forEach(([name, d], i) => {
     const cx = p.x + i * (chW + 0.15);
+    ERR[name + ' task'] = d.sd;
     slide.addChart(pres.ChartType.bar, [
       { name: 'Baseline', labels: cats, values: d.base },
       { name: 'S2A2', labels: cats, values: d.s2a2 },
@@ -301,22 +316,40 @@ const BG_H = 5.6, FW_H = 7.4, RR_H = 8.5, CC_H = 4.2;
       { name: 'w/o Spat.', labels: cats, values: d.spat },
     ], Object.assign({}, chartBase, { x: cx, y: cy0, w: chW, h: chH, barGapWidthPct: 40, showTitle: true, title: name + ' task', showLegend: false }));
   });
-  const fy = cy0 + chH + 0.05;
+  // highlight: the L&I chart (needs WHERE + WHAT) is where S2A2 wins for every policy
+  const hx = p.x + 2 * (chW + 0.15);
+  slide.addShape(pres.ShapeType.roundRect, { x: hx - 0.05, y: cy0 - 0.05, w: chW + 0.1, h: chH + 0.45, fill: { type: 'none' }, line: { color: ORANGE, width: 4 }, rectRadius: 0.12 });
+  label('★ S2A2 best for all 4 policies', hx, cy0 + chH, chW, 0.38, { fontSize: 20, color: ORANGE });
+  label('error bars: ± STD over 3 seeds', p.x + 3 * (chW + 0.15), cy0 + chH, chW, 0.38, { fontSize: 20, color: MUTED, bold: false });
+  const fy = cy0 + chH + 0.45;
   bullets([
     [B('S2A2 is best on L&I for all 4 policies.'), ' The spatial map helps whenever ', C('WHERE'), ' matters and beats raw multi-channel audio there (ACT, Localization: 73 vs 43 %).'],
   ], { x: p.x, y: fy, w: p.w, h: 1.05 });
   // --- t-SNE latent space (Fig. 4a)
   const ty = fy + 1.1, th = p.bottom - ty;
   label('Latent space of Diffusion Policy on the L&I task (t-SNE [13])', p.x, ty, p.w, 0.4, { fontSize: 22, align: 'left' });
-  const conds = ['Baseline', 'S2A2', 'w/o Spec.', 'w/o Spat.'];
-  const rowLblW = 1.45, ph = (th - 0.45 - 0.35 - 0.1) / 2, pw = ph * 755 / 907;
-  conds.forEach((c, j) => label(c, p.x + rowLblW + j * (pw + 0.1) - 0.15, ty + 0.42, pw + 0.3, 0.33, { fontSize: 20, color: j === 1 ? NAVY : MUTED }));
+  const conds = ['Baseline', 'S2A2', 'w/o\nSpec.', 'w/o\nSpat.'];
+  const hdrH = 0.62, rowLblW = 1.45, ph = (th - 0.45 - hdrH - 0.1) / 2, pw = ph * 755 / 907;
+  conds.forEach((c, j) => label(c, p.x + rowLblW + j * (pw + 0.1) - 0.1, ty + 0.42, pw + 0.2, hdrH, { fontSize: 20, color: j === 1 ? NAVY : MUTED, valign: 'bottom' }));
+  const rowY = [0, 1].map((i) => ty + 0.45 + hdrH + i * (ph + 0.1));
   ['Sound\ntype', 'Source\nY-coord.'].forEach((r, i) => {
-    const yy = ty + 0.78 + i * (ph + 0.1);
-    label(r, p.x, yy, rowLblW - 0.1, ph, { fontSize: 20, align: 'right', color: MUTED });
-    conds.forEach((c, j) => img(`tsne_r${i}_c${j}.png`, p.x + rowLblW + j * (pw + 0.1), yy, pw, ph));
+    label(r, p.x, rowY[i], rowLblW - 0.1, ph, { fontSize: 20, align: 'right', color: MUTED });
+    conds.forEach((c, j) => img(`tsne_r${i}_c${j}.png`, p.x + rowLblW + j * (pw + 0.1), rowY[i], pw, ph));
   });
-  const tx = p.x + rowLblW + 4 * (pw + 0.1) + 0.2;
+  // highlight the S2A2 column
+  const sxx = p.x + rowLblW + (pw + 0.1) - 0.06;
+  slide.addShape(pres.ShapeType.roundRect, { x: sxx, y: rowY[0] - 0.06, w: pw + 0.12, h: 2 * ph + 0.22, fill: { type: 'none' }, line: { color: ORANGE, width: 4 }, rectRadius: 0.08 });
+  // legend (sound type) and colour bar (Y-coordinate)
+  const kx = p.x + rowLblW + 4 * (pw + 0.1) + 0.15;
+  slide.addShape(pres.ShapeType.rect, { x: kx, y: rowY[0] + 0.1, w: 0.36, h: 0.36, fill: { color: 'FF7F0E' }, line: { color: 'FF7F0E', width: 0 } });
+  label('sound A', kx + 0.44, rowY[0] + 0.01, 1.4, 0.54, { fontSize: 20, bold: false, align: 'left', color: TXT });
+  slide.addShape(pres.ShapeType.rect, { x: kx, y: rowY[0] + 0.7, w: 0.36, h: 0.36, fill: { color: '1F77B4' }, line: { color: '1F77B4', width: 0 } });
+  label('sound B', kx + 0.44, rowY[0] + 0.61, 1.4, 0.54, { fontSize: 20, bold: false, align: 'left', color: TXT });
+  img('tsne_cbar.png', kx, rowY[1], 0.3, ph);
+  label('+0.3', kx + 0.38, rowY[1] - 0.05, 1.0, 0.3, { fontSize: 20, bold: false, align: 'left', color: TXT });
+  label('0', kx + 0.38, rowY[1] + ph / 2 - 0.15, 1.0, 0.3, { fontSize: 20, bold: false, align: 'left', color: TXT });
+  label('−0.3 m', kx + 0.38, rowY[1] + ph - 0.25, 1.4, 0.3, { fontSize: 20, bold: false, align: 'left', color: TXT });
+  const tx = kx + 1.8;
   bullets([
     ['Color = sound type (top) or Y-coordinate of the sounding object (bottom).'],
     [B('S2A2'), ' separates ', C('both'), ' cues; w/o Spat. loses position, w/o Spec. loses timbre → the two acoustic cues play independent roles in the latent space.'],
@@ -334,7 +367,7 @@ const BG_H = 5.6, FW_H = 7.4, RR_H = 8.5, CC_H = 4.2;
     [B('ACT'), '; 100 teleop demos per task; 100 trials'],
     [B('S2A2 wins both tasks'), ': 72 % on L&I vs 5 % vision-only; spatial + spectral > either'],
   ], { x: p.x + pw + 0.3, y: p.y, w: p.w - pw - 0.3, h: ph + 0.45, gap: 1 });
-  const cy = p.y + ph + 0.5, ch = p.bottom - cy, cw = 6.7;
+  const cy = p.y + ph + 0.5, ch = p.bottom - cy, cw = 6.2;
   slide.addChart(pres.ChartType.bar, [
     { name: 'Baseline', labels: ['L&I', 'Exploratory'], values: [5, 12] },
     { name: 'S2A2', labels: ['L&I', 'Exploratory'], values: [72, 50] },
@@ -346,6 +379,9 @@ const BG_H = 5.6, FW_H = 7.4, RR_H = 8.5, CC_H = 4.2;
     showLegend: true, legendPos: 'r', legendFontSize: 20, legendFontFace: FONT, legendColor: TXT,
     showValue: true, dataLabelPosition: 'outEnd', dataLabelFormatCode: '0',
   }));
+  // callout on the S2A2 bar of the L&I task
+  label('×14 vs\nvision only', p.x + 2.95, cy + 0.72, 1.8, 0.7, { fontSize: 20, color: ORANGE, align: 'left' });
+  arrow(p.x + 2.95, cy + 1.3, p.x + 2.2, cy + 1.85, ORANGE, 2.5);
   const sx = p.x + cw + 0.3, sw = p.w - cw - 0.3, sh = sw * 464 / 1452;
   const blockH = 0.45 + sh + 0.67, sy = cy + (ch - blockH) / 2;
   label('S2A2 + ACT on the exploratory task', sx, sy, sw, 0.42, { fontSize: 22 });
@@ -401,4 +437,4 @@ const BG_H = 5.6, FW_H = 7.4, RR_H = 8.5, CC_H = 4.2;
   text(refs, { x: p.x + 7.0, y: p.y - 0.05, w: p.w - 7.0, h: p.h + 0.05, fontSize: 16, color: MUTED, lineSpacingMultiple: 1.0 });
 }
 
-pres.writeFile({ fileName: OUT }).then(() => console.log('wrote', OUT));
+pres.writeFile({ fileName: OUT }).then(() => { require('fs').writeFileSync(OUT + '.errbars.json', JSON.stringify(ERR)); console.log('wrote', OUT); });
