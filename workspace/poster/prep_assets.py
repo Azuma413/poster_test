@@ -75,6 +75,21 @@ save(f4.crop((4064, 99, 4164, 2022)), 'tsne_cbar.png')
 f5 = Image.open(os.path.join(root, 'fig', 'fig5.png')).convert('RGB')
 save(f5.crop((0, 72, 1452, 776)), 'real_seq.png')   # robot / spatial map / spectrogram rows
 
+# --- header band gradient (sampled from the hand-edited poster: light blue at the logos -> 0E58C3)
+stops = [(0.00, (0xA7, 0xC8, 0xF5)), (0.19, (0x5A, 0x8F, 0xDD)), (0.29, (0x3A, 0x77, 0xD2)), (0.42, (0x0E, 0x58, 0xC3)), (1.0, (0x0E, 0x58, 0xC3))]
+band = Image.new('RGB', (4800, 300))
+px = band.load()
+for xi in range(4800):
+    t = xi / 4799
+    for (t0, c0), (t1, c1) in zip(stops, stops[1:]):
+        if t0 <= t <= t1:
+            u = (t - t0) / (t1 - t0) if t1 > t0 else 0
+            col = tuple(round(c0[k] + (c1[k] - c0[k]) * u) for k in range(3))
+            break
+    for yi in range(300):
+        px[xi, yi] = col
+band.save(os.path.join(out, 'band.png')); print('band.png')
+
 # --- logos ---------------------------------------------------------------------
 save(Image.open(os.path.join(root, 'ロゴ', 'E-C.png')).convert('RGBA'), 'kyoto.png')
 save(Image.open(os.path.join(root, 'ロゴ', 'symbol4_300_.gif')).convert('RGBA'), 'riken.png')

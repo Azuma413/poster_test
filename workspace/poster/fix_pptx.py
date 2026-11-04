@@ -18,12 +18,30 @@ def err_xml(vals):
             f'<c:plus>{lit}</c:plus><c:minus>{lit}</c:minus>'
             '<c:spPr><a:ln w="22225" cap="rnd"><a:solidFill><a:srgbClr val="333333"/></a:solidFill></a:ln></c:spPr></c:errBars>')
 
+current_name = ''
+DOTGRID = ('<a:pattFill prst="dotGrid"><a:fgClr><a:srgbClr val="0E58C3"/></a:fgClr>'
+           '<a:bgClr><a:srgbClr val="FFFFFF"/></a:bgClr></a:pattFill>')
+
+def dot_grid(xml):
+    """Replace the solid fill of the shape named bg-dotgrid with a dot-grid pattern fill."""
+    def per_shape(mm):
+        body = mm.group(0)
+        if 'name="bg-dotgrid"' not in body:
+            return body
+        return re.sub(r'<a:solidFill>.*?</a:solidFill>', DOTGRID, body, count=1, flags=re.S)
+    return re.sub(r'<p:sp>.*?</p:sp>', per_shape, xml, flags=re.S)
+
 def add_errbars(xml):
     m = re.search(r'<c:title>.*?<a:t>(.*?)</a:t>', xml, re.S)
     title = html.unescape(m.group(1)) if m else None
-    if title not in errbars:
+    key = title if title in errbars else None
+    if key is None:
+        m2 = re.search(r'chart(\d+)\.xml$', current_name)
+        if m2 and ('#' + m2.group(1)) in errbars:
+            key = '#' + m2.group(1)
+    if key is None:
         return xml
-    series = errbars[title]
+    series = errbars[key]
     idx = [0]
     def per_ser(mm):
         body = mm.group(0)
@@ -48,8 +66,10 @@ def fix_para(m):
 for item in zin.infolist():
     data = zin.read(item.filename)
     if item.filename.startswith('ppt/slides/slide') and item.filename.endswith('.xml'):
-        data = re.sub(r'<a:p>.*?</a:p>', fix_para, data.decode('utf-8'), flags=re.S).encode('utf-8')
+        data = re.sub(r'<a:p>.*?</a:p>', fix_para, data.decode('utf-8'), flags=re.S)
+        data = dot_grid(data).encode('utf-8')
     elif item.filename.startswith('ppt/charts/chart') and item.filename.endswith('.xml'):
+        current_name = item.filename
         data = add_errbars(data.decode('utf-8')).encode('utf-8')
     zout.writestr(item, data)
 zout.close(); zin.close()
